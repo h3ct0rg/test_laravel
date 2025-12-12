@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 
 class TaskController extends Controller
 {
@@ -16,7 +18,9 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::with('user')->paginate(10);
+        $tasks = Task::with('user')
+        ->orderBy('created_at', 'DESC')
+        ->paginate(10);
 
         return TaskResource::collection($tasks);
     }
@@ -27,7 +31,7 @@ class TaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTaskRequest $request)
     {
         $task = Task::create($request->validated());
 
@@ -54,7 +58,7 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateTaskRequest  $request, $id)
     {
         $task = Task::findOrFail($id);
 

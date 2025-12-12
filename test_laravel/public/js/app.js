@@ -2245,20 +2245,20 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     fetchTask: function fetchTask() {
       var _this3 = this;
       return _asyncToGenerator(/*#__PURE__*/_regenerator().m(function _callee3() {
-        var _yield$axios$get2, data;
+        var response, task;
         return _regenerator().w(function (_context3) {
           while (1) switch (_context3.n) {
             case 0:
               _context3.n = 1;
               return axios__WEBPACK_IMPORTED_MODULE_0___default().get("/api/tasks/".concat(_this3.id));
             case 1:
-              _yield$axios$get2 = _context3.v;
-              data = _yield$axios$get2.data;
+              response = _context3.v;
+              task = response.data.data; // aquí está la tarea
               _this3.form = {
-                titulo: data.titulo,
-                descripcion: data.descripcion,
-                estado: data.estado,
-                user_id: data.user.id
+                titulo: task.titulo,
+                descripcion: task.descripcion,
+                estado: task.estado,
+                user_id: task.user.id
               };
             case 2:
               return _context3.a(2);
@@ -2431,7 +2431,13 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   data: function data() {
     return {
       tasks: [],
-      pagination: {},
+      pagination: {
+        current_page: 1,
+        last_page: 1,
+        prev_page_url: null,
+        next_page_url: null,
+        total: 0
+      },
       loading: false
     };
   },
@@ -2455,8 +2461,17 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             case 2:
               _yield$axios$get = _context.v;
               data = _yield$axios$get.data;
-              _this.tasks = data.data || data;
-              _this.pagination = data.data ? data : {};
+              // Para Resource::collection, las tareas vienen en data.data
+              _this.tasks = data.data;
+
+              // La paginación viene en data.meta y data.links
+              _this.pagination = {
+                current_page: data.meta.current_page,
+                last_page: data.meta.last_page,
+                prev_page_url: data.links.prev,
+                next_page_url: data.links.next,
+                total: data.meta.total
+              };
             case 3:
               _context.p = 3;
               _this.loading = false;
@@ -20271,10 +20286,6 @@ var render = function () {
                 { key: task.id, staticClass: "border-t border-slate-700" },
                 [
                   _c("td", { staticClass: "px-4 py-2" }, [
-                    _vm._v(_vm._s(task.id)),
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "px-4 py-2" }, [
                     _vm._v(_vm._s(task.titulo)),
                   ]),
                   _vm._v(" "),
@@ -20317,7 +20328,7 @@ var render = function () {
                             to: { name: "tasks.edit", params: { id: task.id } },
                           },
                         },
-                        [_vm._v("\n              Editar\n            ")]
+                        [_vm._v("\n              Editar\n              ")]
                       ),
                       _vm._v(" "),
                       _c(
@@ -20363,7 +20374,7 @@ var render = function () {
     ]),
     _vm._v(" "),
     _vm.pagination.total
-      ? _c("div", { staticClass: "flex justify-between items-center" }, [
+      ? _c("div", { staticClass: "flex justify-between items-center mt-4" }, [
           _c("p", { staticClass: "text-xs text-slate-400" }, [
             _vm._v(
               "\n      Página " +
@@ -20416,8 +20427,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", { staticClass: "bg-slate-700" }, [
       _c("tr", [
-        _c("th", { staticClass: "px-4 py-2 text-left" }, [_vm._v("ID")]),
-        _vm._v(" "),
         _c("th", { staticClass: "px-4 py-2 text-left" }, [_vm._v("Título")]),
         _vm._v(" "),
         _c("th", { staticClass: "px-4 py-2 text-left" }, [_vm._v("Estado")]),

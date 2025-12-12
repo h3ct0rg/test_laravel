@@ -14,7 +14,6 @@
       <table class="min-w-full text-sm text-slate-100">
         <thead class="bg-slate-700">
           <tr>
-            <th class="px-4 py-2 text-left">ID</th>
             <th class="px-4 py-2 text-left">Título</th>
             <th class="px-4 py-2 text-left">Estado</th>
             <th class="px-4 py-2 text-left">Usuario</th>
@@ -27,7 +26,6 @@
             :key="task.id"
             class="border-t border-slate-700"
           >
-            <td class="px-4 py-2">{{ task.id }}</td>
             <td class="px-4 py-2">{{ task.titulo }}</td>
             <td class="px-4 py-2">
               <span
@@ -44,9 +42,9 @@
               <router-link
                 :to="{ name: 'tasks.edit', params: { id: task.id } }"
                 class="px-3 py-1 rounded bg-blue-600 text-white text-xs hover:bg-blue-500"
-              >
+                >
                 Editar
-              </router-link>
+                </router-link>
               <button
                 @click="destroy(task.id)"
                 class="px-3 py-1 rounded bg-red-600 text-white text-xs hover:bg-red-500"
@@ -64,7 +62,7 @@
       </table>
     </div>
 
-    <div class="flex justify-between items-center" v-if="pagination.total">
+    <div class="flex justify-between items-center mt-4" v-if="pagination.total">
       <p class="text-xs text-slate-400">
         Página {{ pagination.current_page }} de {{ pagination.last_page }}
       </p>
@@ -88,31 +86,49 @@
   </div>
 </template>
 
+
+
 <script>
 import axios from 'axios';
 
 export default {
   name: 'TasksIndex',
-  data() {
+    data() {
     return {
-      tasks: [],
-      pagination: {},
-      loading: false,
+        tasks: [],
+        pagination: {
+        current_page: 1,
+        last_page: 1,
+        prev_page_url: null,
+        next_page_url: null,
+        total: 0,
+        },
+        loading: false,
     };
-  },
+    },
   created() {
     this.fetchTasks();
   },
   methods: {
     async fetchTasks(page = 1) {
-      this.loading = true;
-      try {
-        const { data } = await axios.get(`/api/tasks?page=${page}`);
-        this.tasks = data.data || data;
-        this.pagination = data.data ? data : {};
-      } finally {
-        this.loading = false;
-      }
+        this.loading = true;
+        try {
+            const { data } = await axios.get(`/api/tasks?page=${page}`);
+
+            // Para Resource::collection, las tareas vienen en data.data
+            this.tasks = data.data;
+
+            // La paginación viene en data.meta y data.links
+            this.pagination = {
+            current_page: data.meta.current_page,
+            last_page: data.meta.last_page,
+            prev_page_url: data.links.prev,
+            next_page_url: data.links.next,
+            total: data.meta.total,
+            };
+        } finally {
+            this.loading = false;
+        }
     },
     async destroy(id) {
       if (!confirm('¿Eliminar tarea?')) return;

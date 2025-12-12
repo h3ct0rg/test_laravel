@@ -9,7 +9,7 @@ Vue.use(VueRouter);
 const routes = [
   { path: '/', name: 'tasks.index', component: TasksIndex },
   { path: '/tasks/create', name: 'tasks.create', component: TaskForm },
-  { path: '/tasks/:id/edit', name: 'tasks.edit', component: TaskForm, props: true },
+  { path: '/tasks/:id/edit', name: 'tasks.edit', component: TaskForm, props: true }
 ];
 
 const router = new VueRouter({

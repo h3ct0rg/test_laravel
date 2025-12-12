@@ -130,13 +130,15 @@ export default {
       this.users = data;
     },
     async fetchTask() {
-      const { data } = await axios.get(`/api/tasks/${this.id}`);
-      this.form = {
-        titulo: data.titulo,
-        descripcion: data.descripcion,
-        estado: data.estado,
-        user_id: data.user.id,
-      };
+    const response = await axios.get(`/api/tasks/${this.id}`);
+    const task = response.data.data; // aquí está la tarea
+
+    this.form = {
+        titulo: task.titulo,
+        descripcion: task.descripcion,
+        estado: task.estado,
+        user_id: task.user.id,
+    };
     },
     async submit() {
       this.errors = {};
