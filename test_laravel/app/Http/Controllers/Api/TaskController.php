@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Resources\TaskResource;
 
 class TaskController extends Controller
 {
@@ -16,7 +17,7 @@ class TaskController extends Controller
     {
         $tasks = Task::with('user')->paginate(10);
 
-        return response()->json($tasks);
+        return TaskResource::collection($tasks);
     }
 
     /**
@@ -42,7 +43,7 @@ class TaskController extends Controller
     {
         $task = Task::with('user')->findOrFail($id);
 
-        return response()->json($task);
+        return new TaskResource($task);
     }
 
     /**
