@@ -2454,6 +2454,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           while (1) switch (_context.p = _context.n) {
             case 0:
               page = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 1;
+              //despliega tareas
               _this.loading = true;
               _context.p = 1;
               _context.n = 2;
@@ -2497,7 +2498,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _context2.n = 2;
               return axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]("/api/tasks/".concat(id));
             case 2:
-              _this2.fetchTasks(_this2.pagination.current_page || 1);
+              _this2.fetchTasks(_this2.pagination.current_page || 1); //vuelve a paginar
             case 3:
               return _context2.a(2);
           }
@@ -2505,14 +2506,15 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }))();
     },
     badgeClass: function badgeClass(estado) {
+      //clases para cada tipo de estado
       if (estado === 'pendiente') {
-        return 'bg-amber-500/20 text-amber-300';
+        return 'bg-orange-500 text-white';
       }
       if (estado === 'en_progreso') {
-        return 'bg-sky-500/20 text-sky-300';
+        return 'bg-sky-500 text-white';
       }
       if (estado === 'completada') {
-        return 'bg-emerald-500/20 text-emerald-300';
+        return 'bg-emerald-500 text-white';
       }
       return 'bg-slate-500/20 text-slate-300';
     }
@@ -20256,8 +20258,8 @@ var render = function () {
       "div",
       { staticClass: "flex items-center justify-between" },
       [
-        _c("h1", { staticClass: "text-2xl font-bold text-white" }, [
-          _vm._v("Tareas"),
+        _c("h1", { staticClass: "text-2xl font-bold text-[#0D124F]" }, [
+          _vm._v("Tasks"),
         ]),
         _vm._v(" "),
         _c(
@@ -20273,109 +20275,120 @@ var render = function () {
       1
     ),
     _vm._v(" "),
-    _c("div", { staticClass: "bg-slate-800 shadow rounded overflow-hidden" }, [
-      _c("table", { staticClass: "min-w-full text-sm text-slate-100" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          [
-            _vm._l(_vm.tasks, function (task) {
-              return _c(
-                "tr",
-                { key: task.id, staticClass: "border-t border-slate-700" },
-                [
-                  _c("td", { staticClass: "px-4 py-2" }, [
-                    _vm._v(_vm._s(task.titulo)),
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "px-4 py-2" }, [
+    _c(
+      "div",
+      { staticClass: "bg-white shadow rounded overflow-hidden shadow-md" },
+      [
+        _c("table", { staticClass: "min-w-full text-sm" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            [
+              _vm._l(_vm.tasks, function (task) {
+                return _c(
+                  "tr",
+                  {
+                    key: task.id,
+                    staticClass:
+                      "border-t border-slate-700 hover:bg-gray-200 text-[#0D124F]",
+                  },
+                  [
+                    _c("td", { staticClass: "px-4 py-2" }, [
+                      _vm._v(_vm._s(task.titulo)),
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "px-4 py-2" }, [
+                      _c(
+                        "span",
+                        {
+                          staticClass:
+                            "inline-flex rounded-full px-2 py-0.5 text-xs font-semibold",
+                          class: _vm.badgeClass(task.estado),
+                        },
+                        [
+                          _vm._v(
+                            "\n              " +
+                              _vm._s(task.estado) +
+                              "\n            "
+                          ),
+                        ]
+                      ),
+                    ]),
+                    _vm._v(" "),
+                    _c("td", { staticClass: "px-4 py-2" }, [
+                      _vm._v(
+                        "\n            " +
+                          _vm._s(task.user && task.user.nombre) +
+                          "\n          "
+                      ),
+                    ]),
+                    _vm._v(" "),
                     _c(
-                      "span",
+                      "td",
+                      { staticClass: "px-4 py-2 text-right space-x-2" },
+                      [
+                        _c(
+                          "router-link",
+                          {
+                            staticClass:
+                              "px-3 py-1 rounded bg-blue-600 text-white text-xs hover:bg-blue-500",
+                            attrs: {
+                              to: {
+                                name: "tasks.edit",
+                                params: { id: task.id },
+                              },
+                            },
+                          },
+                          [_vm._v("\n              Editar\n              ")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass:
+                              "px-3 py-1 rounded bg-red-600 text-white text-xs hover:bg-red-500",
+                            on: {
+                              click: function ($event) {
+                                return _vm.destroy(task.id)
+                              },
+                            },
+                          },
+                          [_vm._v("\n              Eliminar\n            ")]
+                        ),
+                      ],
+                      1
+                    ),
+                  ]
+                )
+              }),
+              _vm._v(" "),
+              !_vm.loading && _vm.tasks.length === 0
+                ? _c("tr", [
+                    _c(
+                      "td",
                       {
-                        staticClass:
-                          "inline-flex rounded-full px-2 py-0.5 text-xs font-semibold",
-                        class: _vm.badgeClass(task.estado),
+                        staticClass: "px-4 py-4 text-center text-slate-400",
+                        attrs: { colspan: "5" },
                       },
                       [
                         _vm._v(
-                          "\n              " +
-                            _vm._s(task.estado) +
-                            "\n            "
+                          "\n            No hay tareas registradas.\n          "
                         ),
                       ]
                     ),
-                  ]),
-                  _vm._v(" "),
-                  _c("td", { staticClass: "px-4 py-2" }, [
-                    _vm._v(
-                      "\n            " +
-                        _vm._s(task.user && task.user.nombre) +
-                        "\n          "
-                    ),
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "td",
-                    { staticClass: "px-4 py-2 text-right space-x-2" },
-                    [
-                      _c(
-                        "router-link",
-                        {
-                          staticClass:
-                            "px-3 py-1 rounded bg-blue-600 text-white text-xs hover:bg-blue-500",
-                          attrs: {
-                            to: { name: "tasks.edit", params: { id: task.id } },
-                          },
-                        },
-                        [_vm._v("\n              Editar\n              ")]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass:
-                            "px-3 py-1 rounded bg-red-600 text-white text-xs hover:bg-red-500",
-                          on: {
-                            click: function ($event) {
-                              return _vm.destroy(task.id)
-                            },
-                          },
-                        },
-                        [_vm._v("\n              Eliminar\n            ")]
-                      ),
-                    ],
-                    1
-                  ),
-                ]
-              )
-            }),
-            _vm._v(" "),
-            !_vm.loading && _vm.tasks.length === 0
-              ? _c("tr", [
-                  _c(
-                    "td",
-                    {
-                      staticClass: "px-4 py-4 text-center text-slate-400",
-                      attrs: { colspan: "5" },
-                    },
-                    [
-                      _vm._v(
-                        "\n            No hay tareas registradas.\n          "
-                      ),
-                    ]
-                  ),
-                ])
-              : _vm._e(),
-          ],
-          2
-        ),
-      ]),
-    ]),
+                  ])
+                : _vm._e(),
+            ],
+            2
+          ),
+        ]),
+      ]
+    ),
     _vm._v(" "),
     _vm.pagination.total
       ? _c("div", { staticClass: "flex justify-between items-center mt-4" }, [
-          _c("p", { staticClass: "text-xs text-slate-400" }, [
+          _c("p", { staticClass: "text-xs text-[#0D124F]" }, [
             _vm._v(
               "\n      Página " +
                 _vm._s(_vm.pagination.current_page) +
@@ -20390,7 +20403,7 @@ var render = function () {
               "button",
               {
                 staticClass:
-                  "px-3 py-1 rounded bg-slate-700 text-xs text-slate-200 disabled:opacity-40",
+                  "px-3 py-1 rounded bg-slate-200 text-xs text-[#0D124F] disabled:opacity-40",
                 attrs: { disabled: !_vm.pagination.prev_page_url },
                 on: {
                   click: function ($event) {
@@ -20405,7 +20418,7 @@ var render = function () {
               "button",
               {
                 staticClass:
-                  "px-3 py-1 rounded bg-slate-700 text-xs text-slate-200 disabled:opacity-40",
+                  "px-3 py-1 rounded bg-slate-200 text-xs text-[#0D124F] disabled:opacity-40",
                 attrs: { disabled: !_vm.pagination.next_page_url },
                 on: {
                   click: function ($event) {
@@ -20425,7 +20438,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", { staticClass: "bg-slate-700" }, [
+    return _c("thead", { staticClass: "bg-[#0D124F] text-white" }, [
       _c("tr", [
         _c("th", { staticClass: "px-4 py-2 text-left" }, [_vm._v("Título")]),
         _vm._v(" "),

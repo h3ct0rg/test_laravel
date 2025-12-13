@@ -125,7 +125,7 @@ export default {
     }
   },
   methods: {
-    async fetchUsers() {
+    async fetchUsers() { //trae usuairos
       const { data } = await axios.get('/api/users');
       this.users = data;
     },
@@ -145,9 +145,9 @@ export default {
       this.submitting = true;
       try {
         if (this.isEdit) {
-          await axios.put(`/api/tasks/${this.id}`, this.form);
+          await axios.put(`/api/tasks/${this.id}`, this.form); //para editar tarea
         } else {
-          await axios.post('/api/tasks', this.form);
+          await axios.post('/api/tasks', this.form);  //para nueva tarea
         }
         this.$router.push({ name: 'tasks.index' });
       } catch (error) {

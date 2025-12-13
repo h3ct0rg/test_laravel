@@ -1,7 +1,7 @@
 <template>
   <div class="space-y-4">
     <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-bold text-white">Tareas</h1>
+      <h1 class="text-2xl font-bold text-[#0D124F]">Tasks</h1>
       <router-link
         :to="{ name: 'tasks.create' }"
         class="px-4 py-2 rounded bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-500"
@@ -10,9 +10,9 @@
       </router-link>
     </div>
 
-    <div class="bg-slate-800 shadow rounded overflow-hidden">
-      <table class="min-w-full text-sm text-slate-100">
-        <thead class="bg-slate-700">
+    <div class="bg-white shadow rounded overflow-hidden shadow-md">
+      <table class="min-w-full text-sm">
+        <thead class="bg-[#0D124F] text-white">
           <tr>
             <th class="px-4 py-2 text-left">Título</th>
             <th class="px-4 py-2 text-left">Estado</th>
@@ -24,7 +24,7 @@
           <tr
             v-for="task in tasks"
             :key="task.id"
-            class="border-t border-slate-700"
+            class="border-t border-slate-700 hover:bg-gray-200 text-[#0D124F]"
           >
             <td class="px-4 py-2">{{ task.titulo }}</td>
             <td class="px-4 py-2">
@@ -63,19 +63,19 @@
     </div>
 
     <div class="flex justify-between items-center mt-4" v-if="pagination.total">
-      <p class="text-xs text-slate-400">
+      <p class="text-xs text-[#0D124F]">
         Página {{ pagination.current_page }} de {{ pagination.last_page }}
       </p>
       <div class="space-x-2">
         <button
-          class="px-3 py-1 rounded bg-slate-700 text-xs text-slate-200 disabled:opacity-40"
+          class="px-3 py-1 rounded bg-slate-200 text-xs text-[#0D124F] disabled:opacity-40"
           :disabled="!pagination.prev_page_url"
           @click="fetchTasks(pagination.current_page - 1)"
         >
           Anterior
         </button>
         <button
-          class="px-3 py-1 rounded bg-slate-700 text-xs text-slate-200 disabled:opacity-40"
+          class="px-3 py-1 rounded bg-slate-200 text-xs text-[#0D124F] disabled:opacity-40"
           :disabled="!pagination.next_page_url"
           @click="fetchTasks(pagination.current_page + 1)"
         >
@@ -110,7 +110,7 @@ export default {
     this.fetchTasks();
   },
   methods: {
-    async fetchTasks(page = 1) {
+    async fetchTasks(page = 1) { //despliega tareas
         this.loading = true;
         try {
             const { data } = await axios.get(`/api/tasks?page=${page}`);
@@ -133,17 +133,17 @@ export default {
     async destroy(id) {
       if (!confirm('¿Eliminar tarea?')) return;
       await axios.delete(`/api/tasks/${id}`);
-      this.fetchTasks(this.pagination.current_page || 1);
+      this.fetchTasks(this.pagination.current_page || 1); //vuelve a paginar
     },
-    badgeClass(estado) {
+    badgeClass(estado) { //clases para cada tipo de estado
       if (estado === 'pendiente') {
-        return 'bg-amber-500/20 text-amber-300';
+        return 'bg-orange-500 text-white';
       }
       if (estado === 'en_progreso') {
-        return 'bg-sky-500/20 text-sky-300';
+        return 'bg-sky-500 text-white';
       }
       if (estado === 'completada') {
-        return 'bg-emerald-500/20 text-emerald-300';
+        return 'bg-emerald-500 text-white';
       }
       return 'bg-slate-500/20 text-slate-300';
     },
